@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Your Hero Section or other content goes here -->
+    <section id="hero" class="hero" style="background-color: #f4f4f4; padding: 60px 0; text-align: center;">
+        <div>
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 36px; color: #333;">
+                Track Shipments & Repairs
+            </h2>
+
+            {% if request.user.is_authenticated %}
+                <p style="font-size: 20px; color: #333;">Welcome, {{ request.user.first_name }}!</p>
+            {% endif %}
+
+            <p style="font-size: 18px; color: #555;">
+                Stay updated on your shipments between stores and repair status for your jewelry items.
+            </p>
+
+            <form method="POST" action="{% url 'index' %}" class="form-search" style="margin-top: 20px;">
+                {% csrf_token %}
+                <input type="text" name="tracking_number" class="form-control" placeholder="Enter Shipment ID or Repair ID" style="padding: 10px; width: 300px; font-size: 16px;">
+                <button type="submit" class="btn" style="background-color: #d4af37; color: white; padding: 10px 20px; border: none; font-size: 16px; cursor: pointer; margin-left: 10px;">Track</button>
+            </form>
+
+            {% if tracking_results %}
+                <div id="tracking-result" style="margin-top: 40px; font-size: 16px; color: #555;">
+                    <h3>Results:</h3>
+                    <p>{{ tracking_results }}</p>
+                </div>
+            {% elif error_message %}
+                <div id="tracking-result" style="margin-top: 40px; font-size: 16px; color: red;">
+                    <p>{{ error_message }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+

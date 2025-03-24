@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ***** Main Content Start ***** -->
+<div class="container" style="padding: 60px 0; text-align: center; background-color: #f4f4f4;">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            {% if messages %}
+                <div class="container mt-4">
+                    {% for message in messages %}
+                        <div class="alert
+                            {% if message.tags == 'error' %} alert-danger
+                            {% elif message.tags == 'success' %} alert-success
+                            {% elif message.tags == 'warning' %} alert-warning
+                            {% else %} alert-info {% endif %}
+                            alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Login Section Heading -->
+            <div class="heading-section">
+                <h4 style="font-family: 'Playfair Display', serif; font-size: 36px; color: #333;">Log In</h4>
+                <p style="font-size: 18px; color: #555;">Log in to track your shipments and repairs for your jewelry items.</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="login-form bg-dark-transparent p-4 rounded">
+                <form action="." method="POST" style="max-width: 500px; margin: 0 auto; text-align: left;">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn" style="background-color: #d4af37; color: white; padding: 10px 20px; border: none; font-size: 16px;">
+                            Log In
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Register Link -->
+                <div class="text-center mt-3">
+                    <span>Don't have an account?</span>
+                    <a href="{% url 'register' %}" class="text-decoration-underline">Register here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ***** Main Content End ***** -->
+{% endblock %}

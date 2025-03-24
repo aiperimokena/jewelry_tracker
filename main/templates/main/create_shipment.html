@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Create Shipment</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="shipment_type" class="form-label">Shipment Type</label>
+                    <select id="shipment_type" class="form-select" onchange="toggleShipmentFields()">
+                        <option value="regular">Regular Shipment</option>
+                        <option value="repair">Repair Shipment</option>
+                    </select>
+                </div>
+
+                <div id="regular_shipment">
+                    {{ shipment_form.as_p }}
+                </div>
+
+                <div id="repair_shipment" style="display: none;">
+                    {{ repair_form.as_p }}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Create Shipment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleShipmentFields() {
+    var type = document.getElementById("shipment_type").value;
+    document.getElementById("regular_shipment").style.display = (type === "regular") ? "block" : "none";
+    document.getElementById("repair_shipment").style.display = (type === "repair") ? "block" : "none";
+}
+</script>
+{% endblock %}
+

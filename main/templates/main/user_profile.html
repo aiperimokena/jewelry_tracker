@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .container {
+        margin-top: 50px;
+    }
+
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .sidebar h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .list-group-item {
+        background-color: transparent;
+        border: none;
+        padding: 10px 15px;
+    }
+
+    .list-group-item a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .list-group-item a:hover {
+        text-decoration: underline;
+    }
+
+    .profile-header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .profile-header h2 {
+        font-size: 30px;
+        color: #333;
+    }
+
+    .profile-info {
+        margin-bottom: 30px;
+    }
+
+    .profile-detail {
+        background-color: #f1f1f1;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+        margin-top: 15px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .shipment-overview {
+        background-color: #e9ecef;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .shipment-overview h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .shipment-overview ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .shipment-overview li {
+        margin-bottom: 10px;
+    }
+
+    .shipment-list table {
+        width: 100%;
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .shipment-list th, .shipment-list td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    .shipment-list th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .shipment-list td a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .shipment-list td a:hover {
+        text-decoration: underline;
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sidebar">
+                <h3>Welcome, {{ user.first_name }}!</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="">Profile</a></li>
+                    <li class="list-group-item"><a href="{% url 'shipments' %}">My Shipments</a></li>
+                    <li class="list-group-item"><a href="{% url 'create_shipment' %}">Create Shipment</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="profile-header">
+                <h2>User Profile</h2>
+                <p>Manage your personal information and shipments.</p>
+            </div>
+
+            <div class="profile-info">
+                <h3>Personal Information</h3>
+                <div class="profile-detail">
+                    <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+                    <p><strong>Joined On:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                </div>
+            </div>
+
+            <div class="shipment-overview">
+                <h2>Shipment Overview</h2>
+                <ul>
+                    <li><strong>Total Shipments:</strong> {{ total_shipments }}</li>
+                    <li><strong>Pending Shipments:</strong> {{ pending_shipments }}</li>
+                    <li><strong>Delivered Shipments:</strong> {{ delivered_shipments }}</li>
+                    <li><strong>Delayed Shipments:</strong> {{ delayed_shipments }}</li>
+                </ul>
+            </div>
+
+            <div class="shipment-list">
+                <h3>My Shipments</h3>
+                {% if shipments %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Tracking Number</th>
+                            <th>Carrier</th>
+                            <th>Status</th>
+                            <th>Shipped Date</th>
+                            <th>Delivery Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for shipment in shipments %}
+                        <tr>
+                            <td>{{ shipment.title }}</td>
+                            <td>{{ shipment.tracking_number }}</td>
+                            <td>{{ shipment.carrier }}</td>
+                            <td>{{ shipment.status }}</td>
+                            <td>{{ shipment.shipped_date|date:"F j, Y" }}</td>
+                            <td>{{ shipment.delivery_date|date:"F j, Y" }}</td>
+                            <td>
+                                <a href="{% url 'shipment_detail' shipment.id %}" class="btn btn-primary">View</a> |
+                                <a href="{% url 'edit_shipment' shipment.id %}" class="btn btn-secondary">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p>You don't have any shipments yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="profile-actions">
+                <a href="" class="btn btn-secondary">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

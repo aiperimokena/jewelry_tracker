@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">All Shipments</h2>
+
+    {% if shipments %}
+    <table class="table table-striped mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Tracking Number</th>
+                <th>Shipment Type</th>
+                <th>Status</th>
+                <th>Destination</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shipment in shipments %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ shipment.tracking_number }}</td>
+                <td>{{ shipment.get_shipment_type_display }}</td>
+                <td>{{ shipment.get_status_display }}</td>
+                <td>{{ shipment.destination }}</td>
+                <td>{{ shipment.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center">No shipments available.</p>
+    {% endif %}
+</div>
+{% endblock %}
