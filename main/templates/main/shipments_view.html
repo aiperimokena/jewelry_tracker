@@ -2,33 +2,45 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">All Shipments</h2>
+    <h2 class="text-center mb-4">All Shipments</h2>
 
     {% if shipments %}
-    <table class="table table-striped mt-4">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Tracking Number</th>
-                <th>Shipment Type</th>
-                <th>Status</th>
-                <th>Destination</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for shipment in shipments %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ shipment.tracking_number }}</td>
-                <td>{{ shipment.get_shipment_type_display }}</td>
-                <td>{{ shipment.get_status_display }}</td>
-                <td>{{ shipment.destination }}</td>
-                <td>{{ shipment.created_at|date:"Y-m-d H:i" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        {% for shipment in shipments %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ shipment.title }}</h5>
+                    <hr>
+                    <p><strong>Tracking Number:</strong> {{ shipment.tracking_number }}</p>
+                    <p><strong>Carrier:</strong> {{ shipment.carrier }}</p>
+                    <p><strong>Status:</strong>
+                        <span class="badge {% if shipment.status == 'shipped' %}bg-success{% elif shipment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ shipment.get_status_display }}
+                        </span>
+                    </p>
+                    <p><strong>Commercial Invoice:</strong>
+                        {% if shipment.commercial_invoice %}
+                            <a href="{{ shipment.commercial_invoice.url }}" target="_blank">View Invoice</a>
+                        {% else %}
+                            No invoice uploaded
+                        {% endif %}
+                    </p>
+                    <p><strong>Shipping From:</strong> {{ shipment.shipping_from }}</p>
+                    <p><strong>Shipping To:</strong> {{ shipment.shipping_to }}</p>
+                    <p><strong>Shipped Date:</strong> {{ shipment.shipped_date|date:"Y-m-d" }}</p>
+                    <p><strong>Notes:</strong> {{ shipment.notes|default:"No notes available" }}</p>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="" class="btn btn-info btn-sm">Details</a>
+                        <a href="" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this shipment?');">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     {% else %}
     <p class="text-center">No shipments available.</p>
     {% endif %}
